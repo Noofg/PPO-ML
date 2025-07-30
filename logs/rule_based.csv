@@ -1,0 +1,6 @@
+episode,episode_reward,final_saving_balance,episode_steps
+1,-6,,20000
+2,-310,,20000
+3,-188,,20000
+4,50,,20000
+5,42,,20000
