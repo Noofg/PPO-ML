@@ -10,7 +10,7 @@ class RewardLoggerCallback(BaseCallback):
         self.episode_savings = []
         self.episode_steps = []
         self.episode_ids = []
-        self.episode_losses = []  # Ghi loss mỗi episode
+        self.episode_losses = [] 
         self.current_rewards = []
         self.current_savings = []
         self.episode_counter = 1
@@ -31,7 +31,7 @@ class RewardLoggerCallback(BaseCallback):
             self.episode_steps.append(len(self.current_rewards))
             self.episode_ids.append(self.episode_counter)
 
-            # 👉 Lấy loss từ logger
+            #  Lấy loss từ logger
             value_loss = self.model.logger.name_to_value.get("train/value_loss", None)
             if value_loss is not None:
                 self.episode_losses.append(value_loss)
@@ -55,4 +55,4 @@ class RewardLoggerCallback(BaseCallback):
         })
         df.to_csv(self.save_path, index=False)
         if self.verbose > 0:
-            print(f"✅ Logged {len(df)} episodes to {self.save_path}")
+            print(f" Logged {len(df)} episodes to {self.save_path}")

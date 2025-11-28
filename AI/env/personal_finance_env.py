@@ -10,7 +10,7 @@ class PersonalFinanceEnv(gym.Env):
         self.current_step = 0
         self.account_balance = 0
         self.saving_balance = 0
-        self.debt_balance = self.data.iloc[0]['debt_balance']
+       # self.debt_balance = self.data.iloc[0]['debt_balance']
 
         # Action: [essential_ratio, entertainment_ratio, saving_ratio, debt_payment_ratio, invest_ratio]
         self.action_space = gym.spaces.Box(0, 1, (5,))

@@ -21,9 +21,9 @@ class HomeScreen extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: const [
-                  _StatCard(title: "Tổng số dư", amount: "50.000.000₫", color: Colors.green),
+                  _StatCard(title: "Tổng số dư", amount: "21.450.000₫", color: Colors.green),
                   _StatCard(title: "Thu nhập", amount: "10.000.000₫", color: Colors.blue),
-                  _StatCard(title: "Chi tiêu", amount: "5.000.000₫", color: Colors.red),
+                  _StatCard(title: "Chi tiêu", amount: "5.540.000₫", color: Colors.red),
                 ],
               ),
               const SizedBox(height: 24),

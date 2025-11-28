@@ -1,12 +1,22 @@
 import torch
 import torch.nn as nn
 
-def build_mlp(input_dim, output_dim, hidden_sizes=[64, 64], activation=nn.ReLU):
-    layers = []
-    prev_size = input_dim
-    for h in hidden_sizes:
-        layers.append(nn.Linear(prev_size, h))
-        layers.append(activation())
-        prev_size = h
-    layers.append(nn.Linear(prev_size, output_dim))
-    return nn.Sequential(*layers)
+class ActorCriticNet(nn.Module):
+    def __init__(self, obs_dim, act_dim):
+        super().__init__()
+        self.shared = nn.Sequential(
+            nn.Linear(obs_dim, 64),
+            nn.ReLU(),
+            nn.Linear(64, 64),
+            nn.ReLU()
+        )
+        self.policy_head = nn.Linear(64, act_dim)
+        self.value_head = nn.Linear(64, 1)
+
+    def forward(self, x):
+        if x.dim() == 1:
+            x = x.unsqueeze(0)
+        x = self.shared(x)
+        logits = self.policy_head(x)
+        value = self.value_head(x)
+        return logits, value

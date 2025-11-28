@@ -1,14 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-
+import 'package:frontend/service/auth.dart';
 class LoginScreen extends StatelessWidget {
   const LoginScreen({super.key});
-
   @override
-  Widget build(BuildContext context) {
+    LoginScreenState createState() => _LoginScreenState();
+}
+class _LoginScreenState extends State<LoginScreen> {
+
     final emailController = TextEditingController();
     final passwordController = TextEditingController();
-
+  @override
+   Widget build(BuildContext context) {
     return Scaffold(
       body: LayoutBuilder(
         builder: (context, constraints) {
@@ -143,6 +146,21 @@ class LoginScreen extends StatelessWidget {
                                       const SizedBox(height: 20),
                                       ElevatedButton(
                                         onPressed: () {
+                                          if (_formKey.currentState!.validate()) {
+                                            final result = await ApiService.loginUser(email, password);
+                                            if (!context.mounted) return;
+                                            if (result != null && result['error'] == null) {
+                                              final role = result['role'];
+                                              if (role == 'admin') {
+                                                 context.go('/admin');
+                                              } else if (role == 'client') {
+                                                  context.go('/home');
+                                              }
+                                              
+                                            }
+
+
+                                          }
                                           context.go('/home');
                                         },
                                         style: ElevatedButton.styleFrom(

@@ -5,11 +5,17 @@ import pandas as pd
 from sklearn.preprocessing import StandardScaler, LabelEncoder
 
 class PersonalLoanEnv(gym.Env):
-    def __init__(self, csv_path):
+    def __init__(self, csv_path=None, data_df=None):
         super(PersonalLoanEnv, self).__init__()
 
-        # Load và xử lý dữ liệu
-        self.df = pd.read_csv(csv_path)
+        # Load dữ liệu từ CSV hoặc DataFrame
+        if data_df is not None:
+            self.df = data_df.copy()
+        elif csv_path is not None:
+            self.df = pd.read_csv(csv_path)
+        else:
+            raise ValueError("Cần truyền csv_path hoặc data_df cho PersonalLoanEnv")
+
         self.original_df = self.df.copy()
 
         # Các cột định danh và số
@@ -44,7 +50,10 @@ class PersonalLoanEnv(gym.Env):
         self.total_steps = len(self.df)
 
         # Định nghĩa không gian
-        self.observation_space = spaces.Box(low=-np.inf, high=np.inf, shape=(len(self.features),), dtype=np.float32)
+        self.observation_space = spaces.Box(
+            low=-np.inf, high=np.inf,
+            shape=(len(self.features),), dtype=np.float32
+        )
         self.action_space = spaces.Discrete(2)  # 0: từ chối, 1: chấp nhận
 
     def reset(self):
@@ -52,25 +61,22 @@ class PersonalLoanEnv(gym.Env):
         return self.data[self.current_index]
 
     def step(self, action):
-        done = False
-        info = {}
-
         actual = self.labels[self.current_index]
-
-        # Tính reward: đúng thì +1, sai thì -1
         reward = 1 if action == actual else -1
 
         self.current_index += 1
-        if self.current_index >= self.total_steps:
-            done = True
+        done = self.current_index >= self.total_steps
+
+        if done:
             obs = np.zeros_like(self.data[0])
         else:
             obs = self.data[self.current_index]
 
-        return obs, reward, done, info
+        return obs, reward, done, {}
+
 if __name__ == "__main__":
     try:
-        env = PersonalLoanEnv('data/dataset.csv')
+        env = PersonalLoanEnv(csv_path='data/dataset.csv')
         print("Khởi tạo môi trường thành công!")
         obs = env.reset()
         print("Observation:", obs)
